@@ -21,11 +21,11 @@ const dfs = (graph, startNode, searchNode) => {
   visited.push(startNode);
   while (stack.length != 0) {
     let v = stack.pop();
+    if (v === searchNode) {
+      return true;
+    }
     for (const neighbor of graph.get(v)) {
       if (!neighbor || neighbor !== "no other") {
-        if (v === searchNode) {
-          return true;
-        }
         if (!visited.includes(neighbor)) {
           stack.push(neighbor);
           visited.push(neighbor);
