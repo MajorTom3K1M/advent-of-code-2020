@@ -6,7 +6,7 @@ const createGraph = () => {
   for (const luggage of luggages) {
     const bags = luggage
       .split(/\s*(?:bag)s{0,1}\.{0,1}(?: contain){0,1},{0,1}(?: \d){0,1}\s*/g)
-      .filter(Boolean);
+      .filter((x) => x && x !== "no other");
     map.set(bags[0], bags.slice(1));
   }
   return map;
@@ -18,18 +18,15 @@ const dfs = (graph, startNode, searchNode) => {
   const stack = [];
   const visited = [];
   stack.push(startNode);
-  visited.push(startNode);
-  while (stack.length != 0) {
-    let v = stack.pop();
-    if (v === searchNode) {
+  while (stack.length > 0) {
+    const visiting = stack.pop();
+    if (visiting === searchNode) {
       return true;
     }
-    for (const neighbor of graph.get(v)) {
-      if (!neighbor || neighbor !== "no other") {
-        if (!visited.includes(neighbor)) {
-          stack.push(neighbor);
-          visited.push(neighbor);
-        }
+    if (!visited.includes(visiting)) {
+      visited.push(visiting);
+      for (const neighbor of graph.get(visiting)) {
+        stack.push(neighbor);
       }
     }
   }
